@@ -1,0 +1,22 @@
+{
+  "name": "wk-argparser",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "node test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wk-js/wk-argparser.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wk-js/wk-argparser/issues"
+  },
+  "homepage": "https://github.com/wk-js/wk-argparser#readme"
+}
