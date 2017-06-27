@@ -54,8 +54,15 @@ const res2 = ARGParser.parse('wk hello --message "Salut tout le monde"', config)
 const res5 = ARGParser.parse('wk hello -v', config)
 // console.log(res5.valid_params)
 
-console.log(ARGParser.join(res5.valid_params))
-console.log(ARGParser.format(res5, true))
+// console.log(ARGParser.join(res5.valid_params))
+// console.log(ARGParser.format(res5, true))
 
-console.log(res5.valid_params)
-console.log(ARGParser.setParameters(res5, res2.params).valid_params)
+// console.log(res5.valid_params)
+// console.log(ARGParser.setParameters(res5, res2.params).valid_params)
+
+ARGParser.contexts.push( 'wk', 'hello' )
+
+const contexts = ARGParser.getContexts('wk --verbose hello --message "yolo"')
+
+console.log(ARGParser.parse(contexts['wk']))
+console.log(ARGParser.parse(contexts['hello'], config))
