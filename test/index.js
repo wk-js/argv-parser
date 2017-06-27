@@ -1,3 +1,6 @@
+'use strict'
+
+const assert    = require('assert')
 const ARGParser = require('../index')
 
 const config = {
@@ -36,33 +39,50 @@ const config = {
   }
 }
 
-// const res0 = ARGParser.parse('wk hello')
-// console.log(res0.valid_params)
+describe('basic', function() {
 
-// const res1 = ARGParser.parse('wk hello Max', config)
-// console.log(res1.valid_params)
+  it('parse', function() {
+    const res = ARGParser.parse('wk hello')
+    assert.equal(res.arg_str, 'wk hello')
+    assert.deepEqual(res.arg_arr, [ 'wk', 'hello' ])
+    assert.deepEqual(res.params, { _: [ 'wk', 'hello' ] })
+  })
 
-const res2 = ARGParser.parse('wk hello --message "Salut tout le monde"', config)
-// console.log(res2.valid_params)
+  it('valid parse', function() {
+    const res = ARGParser.parse('wk hello Max', config)
+    assert.deepEqual(res.valid_params, {
+      who: 'Max',
+      message: 'Hello World',
+      status: 'pending',
+      verbose: false
+    })
+  })
 
-// const res3 = ARGParser.parse('wk hello --status something', config)
-// console.log(res3.valid_params)
+  it('valid parse 2', function() {
+    const res = ARGParser.parse('wk hello --message "Salut tout le monde" --status something --file hello.txt -v', config)
 
-// const res4 = ARGParser.parse('wk hello --file hello.txt', config)
-// console.log(res4.valid_params)
+    assert.deepEqual(res.valid_params, {
+      who: 'John',
+      file: 'hello.txt',
+      message: 'Salut tout le monde',
+      status: 'pending',
+      verbose: true
+    })
 
-const res5 = ARGParser.parse('wk hello -v', config)
-// console.log(res5.valid_params)
+    assert.equal(ARGParser.format(res, true), 'wk hello --who=John --message=Salut tout le monde --status=pending --file=hello.txt --verbose=true')
+  })
 
-// console.log(ARGParser.join(res5.valid_params))
-// console.log(ARGParser.format(res5, true))
+  it('contexts', function() {
+    const parser = ARGParser.new()
+    parser.contexts.push( 'wk', 'hello' )
 
-// console.log(res5.valid_params)
-// console.log(ARGParser.setParameters(res5, res2.params).valid_params)
+    const contexts = parser.getContexts('wk --verbose hello --message "yolo"')
 
-ARGParser.contexts.push( 'wk', 'hello' )
-
-const contexts = ARGParser.getContexts('wk --verbose hello --message "yolo"')
-
-console.log(ARGParser.parse(contexts['wk']))
-console.log(ARGParser.parse(contexts['hello'], config))
+    assert.deepEqual(parser.parse(contexts['hello'], config).valid_params, {
+      who: 'John',
+      message: 'yolo',
+      status: 'pending',
+      verbose: false
+    })
+  })
+})
