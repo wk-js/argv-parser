@@ -25,21 +25,21 @@ ARGParserSingleton.checker('enum', function( parameter, value ) {
   return true
 })
 
-ARGParserSingleton.checker('file', function( parameter, value ) {
-  let res = false
-  let ext = ''
+// ARGParserSingleton.checker('file', function( parameter, value ) {
+//   let res = false
+//   let ext = ''
 
-  if (ARGParserSingleton._checkers['value'](parameter, value)) {
-    ext = path.extname(value)
-    res = ext.length > 1
-  }
+//   if (ARGParserSingleton._checkers['value'](parameter, value)) {
+//     ext = path.extname(value)
+//     res = ext.length > 1
+//   }
 
-  if (parameter.extensions) {
-    res = parameter.extensions.indexOf(ext) !== -1
-  }
+//   if (parameter.extensions) {
+//     res = parameter.extensions.indexOf(ext) !== -1
+//   }
 
-  return res
-})
+//   return res
+// })
 
 ARGParserSingleton.new = (function() {
   const parser     = new ARGParser(...arguments)

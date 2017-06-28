@@ -4,12 +4,21 @@ const ARGParser = require('../index')
 
 const command = ARGParser
 .command('hello')
-.option('who', {
-  no_key: true,
-  index: 1,
-  defaultValue: 'John',
-  description: 'Set who is talking'
+
+.index('who', 1)
+.default('who', 'John')
+.describe('who', 'Who is talking ?')
+
+.string('message')
+.required(['who', 'message'], 'veuillez préciser un message')
+.coerce('message', function(v) {
+  return v === "Salut" ? "Plop" : v
 })
+
+.file('package', [ '.json' ])
+.alias('package', 'p')
+
 .help()
 
-console.log(command.parse('hello Fred --message "world"'))
+const res = command.parse('hello Fred --message "Salut" -p package.json')
+console.log(res)
