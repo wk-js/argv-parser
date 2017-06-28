@@ -74,14 +74,51 @@ describe('basic', function() {
 
   it('contexts', function() {
     const parser = ARGParser.new()
-    parser.contexts.push( 'wk', 'hello' )
 
-    const contexts = parser.getContexts('wk --verbose hello --message "yolo"')
+    parser.contexts.push( 'wk' )
+    parser.contexts.push( /hello/ )
+    parser.contexts.push(function(str) {
+      const arr = [ 'world' ]
+      const regex = new RegExp(`(${arr.join('|')})`, 'g')
+      return str.match(regex)
+    })
 
-    assert.deepEqual(parser.parse(contexts['hello'], config).valid_params, {
+    const contexts = parser.getContexts('wk --verbose hello --message "yolo" world --message "polo"')
+
+    assert.deepEqual(parser.parse(contexts['hello']).params, {
+      _: [ 'hello' ],
+      message: 'yolo'
+    })
+
+    assert.deepEqual(parser.parse(contexts['world']).params, {
+      _: [ 'world' ],
+      message: 'polo'
+    })
+  })
+
+  it('override parameters', function() {
+    const res = ARGParser.parse('wk --message "Hello World" --verbose', config)
+
+    // Test parameters before
+    assert.deepEqual(res.valid_params, {
       who: 'John',
-      message: 'yolo',
+      message: 'Hello World',
       status: 'pending',
+      verbose: true
+    })
+
+    // Override parameters
+    ARGParser.setParameters(res, {
+      message: "Salut tout le monde",
+      status: 'draft',
+      verbose: false
+    })
+
+    // Test parameters after
+    assert.deepEqual(res.valid_params, {
+      who: 'John',
+      message: 'Salut tout le monde',
+      status: 'draft',
       verbose: false
     })
   })
