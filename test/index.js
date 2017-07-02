@@ -7,7 +7,7 @@ const config = {
   who: {
     type: 'value',
     no_key: true,
-    index: 2,
+    index: 1,
     defaultValue: 'John',
     description: 'Set who is talking'
   },
@@ -49,7 +49,7 @@ describe('basic', function() {
   })
 
   it('valid parse', function() {
-    const res = ARGParser.parse('wk hello Max', config)
+    const res = ARGParser.parse('hello Max', config)
     assert.deepEqual(res.valid_params, {
       who: 'Max',
       message: 'Hello World',
@@ -59,7 +59,7 @@ describe('basic', function() {
   })
 
   it('valid parse 2', function() {
-    const res = ARGParser.parse('wk hello --message "Salut tout le monde" --status something --file hello.txt -v', config)
+    const res = ARGParser.parse('hello --message "Salut tout le monde" --status something --file hello.txt -v', config)
 
     assert.deepEqual(res.valid_params, {
       who: 'John',
@@ -69,7 +69,7 @@ describe('basic', function() {
       verbose: true
     })
 
-    assert.equal(ARGParser.format(res, true), 'wk hello --who=John --message=Salut tout le monde --status=pending --file=hello.txt --verbose=true')
+    assert.equal(ARGParser.format(res, true), 'hello --who=John --message=Salut tout le monde --status=pending --file=hello.txt --verbose=true')
   })
 
   it('contexts', function() {

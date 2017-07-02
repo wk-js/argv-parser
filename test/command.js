@@ -42,3 +42,5 @@ const command = ARGParser
 
 const res = command.parse('hello Fred --message "Salut" -p package.json')
 console.log(res)
+
+// console.log(ARGParser.getContextArgv(ARGParser.split('hello Fred --message "Salut" -p package.json'), command.config))
