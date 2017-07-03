@@ -43,47 +43,53 @@ describe('basic', function() {
 
   it('parse', function() {
     const res = ARGParser.parse('wk hello')
-    assert.equal(res.arg_str, 'wk hello')
-    assert.deepEqual(res.arg_arr, [ 'wk', 'hello' ])
+    assert.equal(res.toString(), 'wk hello')
+    assert.deepEqual(res.toArray(), [ 'wk', 'hello' ])
     assert.deepEqual(res.params, { _: [ 'wk', 'hello' ] })
   })
 
   it('valid parse', function() {
     const res = ARGParser.parse('hello Max', config)
-    assert.deepEqual(res.valid_params, {
+
+    assert.deepEqual(res.params, {
       who: 'Max',
       message: 'Hello World',
       status: 'pending',
-      verbose: false
+      verbose: false,
+      _: [ 'hello' ]
     })
   })
 
   it('valid parse 2', function() {
     const res = ARGParser.parse('hello --message "Salut tout le monde" --status something --file hello.txt -v', config)
 
-    assert.deepEqual(res.valid_params, {
+    assert.deepEqual(res.params, {
       who: 'John',
       file: 'hello.txt',
       message: 'Salut tout le monde',
       status: 'pending',
-      verbose: true
+      verbose: true,
+      _: [ 'hello' ]
     })
 
-    assert.equal(ARGParser.format(res, true), 'hello --who=John --message=Salut tout le monde --status=pending --file=hello.txt --verbose=true')
+    assert.equal(res.toString(), 'hello --who="John" --message="Salut tout le monde" --status="pending" --file="hello.txt" --verbose')
   })
 
   it('contexts', function() {
     const parser = ARGParser.new()
 
-    parser.contexts.push( 'wk' )
-    parser.contexts.push( /hello/ )
-    parser.contexts.push(function(str) {
+    const conditions = []
+
+    conditions.push( 'wk' )
+    conditions.push( /hello/ )
+    conditions.push(function(str) {
       const arr = [ 'world' ]
       const regex = new RegExp(`(${arr.join('|')})`, 'g')
       return str.match(regex)
     })
 
-    const contexts = parser.getContexts('wk --verbose hello --message "yolo" world --message "polo"')
+    const cmd      = 'wk --verbose hello --message "yolo" world --message "polo"'
+    const contexts = parser.getContexts(cmd, conditions)
 
     assert.deepEqual(parser.parse(contexts['hello']).params, {
       _: [ 'hello' ],
@@ -97,29 +103,32 @@ describe('basic', function() {
   })
 
   it('override parameters', function() {
-    const res = ARGParser.parse('wk --message "Hello World" --verbose', config)
+    const res = ARGParser.parse('hello --message "Hello World" --verbose', config)
 
     // Test parameters before
-    assert.deepEqual(res.valid_params, {
+    assert.deepEqual(res.params, {
       who: 'John',
       message: 'Hello World',
       status: 'pending',
-      verbose: true
+      verbose: true,
+      _: [ 'hello' ]
     })
 
     // Override parameters
-    ARGParser.setParameters(res, {
+    res.set({
       message: "Salut tout le monde",
       status: 'draft',
-      verbose: false
+      verbose: false,
+      _: [ 'hello' ]
     })
 
     // Test parameters after
-    assert.deepEqual(res.valid_params, {
+    assert.deepEqual(res.params, {
       who: 'John',
       message: 'Salut tout le monde',
       status: 'draft',
-      verbose: false
+      verbose: false,
+      _: [ 'hello' ]
     })
   })
 })
