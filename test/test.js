@@ -34,4 +34,4 @@ argv.config = cmmnd.config
 argv.validate()
 
 console.log(argv.params)
-
+// console.log(Parser.join([`hello`, `--message`, `Salut philippe`]))
