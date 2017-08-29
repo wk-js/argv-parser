@@ -87,7 +87,7 @@ describe('basic', function() {
     })
 
     const cmd      = 'wk --verbose hello --message "yolo" world --message "polo"'
-    const contexts = Parser.contexts(cmd, conditions)
+    const contexts = Parser.splitContexts(cmd, conditions)
 
     assert.deepEqual(Parser.parse(contexts['hello']).params, {
       _: [ 'hello' ],
