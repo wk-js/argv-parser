@@ -10,14 +10,15 @@ class ARGObject {
     this.valid_params = {}
 
     this.config = null
+    this.strict = false
   }
 
   get type() {
-    return this.config ? 'valid' : 'soft'
+    return this.strict ? 'valid' : 'soft'
   }
 
   get params() {
-    return this.config ? this.valid_params : this.soft_params
+    return this.strict ? this.valid_params : this.soft_params
   }
 
   toArray() {
@@ -31,8 +32,7 @@ class ARGObject {
   clone() {
     const obj = new ARGObject(this.parser)
 
-    obj.arg_arr = this.arg_arr.slice(0)
-    obj.params  = clone(this.soft_params)
+    obj.soft_params = clone(this.soft_params)
 
     if (this.config) {
       obj.config       = clone(this.config)
@@ -58,9 +58,7 @@ class ARGObject {
   }
 
   validate() {
-    if (this.config) {
-      this.valid_params = this.parser.getValidParameters( this.soft_params, this.config )
-    }
+    this.valid_params = this.parser.getValidParameters( this.soft_params, this.config )
   }
 }
 
