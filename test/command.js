@@ -1,8 +1,8 @@
 'use strict'
 
-const ARGParser = require('../index')
+const { Parser } = require('../index')
 
-const command = ARGParser
+const command = Parser
 .command('hello')
 
 // .index('who', 1)
@@ -12,7 +12,7 @@ const command = ARGParser
 .option('who', {
   no_key: true,
   index: 1,
-  defaultValue: 'John',
+  default: 'John',
   description: 'Who is talking ?'
 })
 
@@ -41,6 +41,6 @@ const command = ARGParser
 .help()
 
 const res = command.parse('hello Fred --message "Salut" -p package.json')
-console.log(res)
+console.log(res.params)
 
 // console.log(ARGParser.getContextArgv(ARGParser.split('hello Fred --message "Salut" -p package.json'), command.config))
