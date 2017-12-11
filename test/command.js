@@ -36,11 +36,14 @@ const command = Parser
   aliases: [ 'p' ]
 })
 
+.array('anything', '', true)
+.alias('anything', [ 'a' ])
+
 .required(['who', 'message'], 'veuillez préciser un message')
 
 .help()
 
-const res = command.parse('hello Fred --message "Salut" -p package.json')
-console.log(res.params)
+const res = command.parse('hello Fred --message "Salut" -p package.json -a lol -a flol')
+console.log(res.result.params)
 
 // console.log(ARGParser.getContextArgv(ARGParser.split('hello Fred --message "Salut" -p package.json'), command.config))
